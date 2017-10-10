@@ -1,0 +1,8 @@
+
+
+.idea/
+project/project/
+project/target/streams/compile/incCompileSetup/
+/target/
+
+.DS_Store
