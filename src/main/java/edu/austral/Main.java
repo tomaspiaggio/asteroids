@@ -11,6 +11,7 @@ public class Main extends GameFramework {
     }
 
     @Override public void draw(float time, PApplet graphics) {
+
     }
 
     @Override public void keyPressed(KeyEvent event) {
