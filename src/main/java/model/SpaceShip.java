@@ -28,9 +28,9 @@ public class SpaceShip implements Model, Mappable, Collisionable<AbstractProject
         this.speed = speed;
     }
 
-    public Bullet shoot() {
-        return new Bullet(type.getDamage(), type.getSpeed(), type.getShape(), position, /*DIRECTION*/); //con la misma direccion que la spaceship
-    }
+//    public Bullet shoot() {
+//        return new Bullet(type.getDamage(), type.getSpeed(), type.getShape(), position, /*DIRECTION*/); //con la misma direccion que la spaceship
+//    }
 
     public void move(@NotNull Vector2 direction) {
         // left o right porque siempre va a ir para adelante?
