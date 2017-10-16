@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent;
 public abstract class GameFramework extends PApplet {
 
     @Override public void settings() {
-        size(600, 500);
+        size(800, 600);
     }
 
     @Override public void setup() {

@@ -55,14 +55,14 @@ public class SpaceShip implements Model, Mappable, Collisionable<AbstractProject
                 position.setY(position.y() + direction.y());
                 break;
             case CHARGING:
-                if(charging != 0)
+                if(charging == 0)
                     charging = System.currentTimeMillis();
                 break;
         }
     }
 
     public Bullet shoot() {
-        long timePressed = Math.min(charging, 1000); // max time charging bullet = 1 second
+        long timePressed = Math.min(System.currentTimeMillis() - charging, 1000); // max time charging bullet = 1 second
         charging = 0;
         return bulletBuilder
                 .setChargeTime(timePressed, position, direction)

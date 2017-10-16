@@ -3,12 +3,11 @@ package controller;
 import com.sun.istack.internal.NotNull;
 import edu.austral.GameFramework;
 import edu.austral.util.CollisionEngine;
-import edu.austral.util.Collisionable;
 import model.Game;
 import model.SpaceShip;
-import model.interfaces.Mappable;
 import model.interfaces.Model;
 import processing.core.PApplet;
+import view.VisibleAsteroid;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -23,6 +22,7 @@ public class GameController extends GameFramework {
     private final Game game;
     private final List<Model> model;
     private final CollisionEngine collisionEngine;
+    static final int CLOSE = GameFramework.CLOSE;
 
     public GameController(@NotNull List<SpaceShip> spaceShips) {
         this.model = new ArrayList<>(spaceShips);
@@ -34,7 +34,7 @@ public class GameController extends GameFramework {
     @Override
     public void draw(float time, PApplet graphics) {
         // update models according to controllers input and draw them
-        model.forEach(e -> e.update(time));
+//        model.forEach(e -> e.update(time));
     }
 
     @Override
