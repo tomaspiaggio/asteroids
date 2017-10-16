@@ -16,13 +16,16 @@ import java.util.List;
 public class Main extends GameFramework {
 
     private final GameController gameController;
+    final VisibleAsteroid va = new VisibleAsteroid(this);
+    final AsteroidBuilder ab = new AsteroidBuilder(width, height);
+    final Asteroid a = ab.setVertices(5).build();
 
     public Main() {
-        // SpaceShips creation
         final List<SpaceShip> players = new ArrayList<>();
         players.add(new SpaceShip(new Vector2(width/4, height/2)));
         players.add(new SpaceShip(new Vector2((width/4) * 3, height/2)));
         gameController = new GameController(players);
+        va.newAsteroid(a);
     }
 
     public static void main(String args[]) {
@@ -30,9 +33,9 @@ public class Main extends GameFramework {
     }
 
     @Override public void draw(float time, PApplet graphics) {
-        gameController.draw(time, graphics);
-        final VisibleAsteroid va = new VisibleAsteroid(width, height, this);
-        va.displayAsteroid(10, 200, 200);
+//        gameController.draw(time, graphics);
+        va.displayAsteroids();
+        a.update(time);
     }
 
     @Override public void keyPressed(KeyEvent event) {
@@ -56,7 +59,11 @@ public class Main extends GameFramework {
         super.vertex(x, y);
     }
 
-    public void endShape(int option) {
-        super.endShape(option);
+    public void endShape(int option) { super.endShape(option); }
+
+    public void ellipse(float x, float y, float width, float height) { super.ellipse(x, y, width, height); }
+
+    public void circle(float x, float y, float radius) {
+        ellipse(x, y, radius, radius);
     }
 }

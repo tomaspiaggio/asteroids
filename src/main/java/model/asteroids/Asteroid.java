@@ -22,7 +22,7 @@ public class Asteroid extends AbstractProjectile {
 
     @Override
     public void update(float deltaTime) {
-
+        position = new Vector2(position.x() + (direction.x() * deltaTime/1000), position.y() + (direction.y() * deltaTime / 1000));
     }
 
     @Override

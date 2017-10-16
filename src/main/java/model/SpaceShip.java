@@ -62,7 +62,7 @@ public class SpaceShip implements Model, Mappable, Collisionable<AbstractProject
     }
 
     public Bullet shoot() {
-        long timePressed = Math.min(System.currentTimeMillis() - charging, 1000); // max time charging bullet = 1 second
+        long timePressed = System.currentTimeMillis() - charging;
         charging = 0;
         return bulletBuilder
                 .setChargeTime(timePressed, position, direction)

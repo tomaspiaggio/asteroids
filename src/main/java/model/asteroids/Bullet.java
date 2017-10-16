@@ -10,8 +10,11 @@ import java.awt.*;
  */
 public class Bullet extends AbstractProjectile {
 
-    public Bullet(long damage, long speed, @NotNull Vector2 position, @NotNull Vector2 direction) {
+    private float radius;
+
+    public Bullet(long damage, long speed, @NotNull Vector2 position, @NotNull Vector2 direction, float radius) {
         super(damage, speed, /*new Ellpise*/ null, position, direction);
+        this.radius = radius;
     }
 
     @Override
@@ -22,5 +25,9 @@ public class Bullet extends AbstractProjectile {
     @Override
     public void collisionedWith(AbstractProjectile collisionable) {
 
+    }
+
+    public float getRadius() {
+        return radius;
     }
 }

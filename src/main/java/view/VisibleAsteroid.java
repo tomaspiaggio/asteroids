@@ -7,33 +7,35 @@ import model.asteroids.Asteroid;
 import model.builders.AsteroidBuilder;
 import view.interfaces.VisibleObject;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Tomas on 10/15/17.
  */
 public class VisibleAsteroid extends VisibleObject {
 
-    final AsteroidBuilder asteroidBuilder;
-    final Map<Asteroid, Vector2> asteroids;
+    final List<Asteroid> asteroids;
 
-    public VisibleAsteroid(int width, int height, @NotNull Main gameFramework) {
+    public VisibleAsteroid(@NotNull Main gameFramework) {
         super(gameFramework);
-        this.asteroidBuilder = new AsteroidBuilder(width, height);
-        this.asteroids = new HashMap<>();
+        this.asteroids = new ArrayList<>();
     }
 
-    public void newAsteroid(@NotNull Asteroid asteroid, int x, int y) {
-        asteroids.put(asteroid, new Vector2(x, y));
+    public void newAsteroid(@NotNull Asteroid asteroid) {
+        asteroids.add(asteroid);
     }
 
     public void displayAsteroids() {
         gameFramework.beginShape();
-        asteroids.keySet().forEach(a -> a.getPoints().forEach(e -> {
-            final Vector2 vec = asteroids.get(a);
-            gameFramework.vertex(vec.x() + e.x(), vec.y() + e.y());
-        }));
+        asteroids.forEach(a -> {
+            final Vector2 pos = a.getPosition();
+            a.getPoints().forEach(e -> gameFramework.vertex(e.x() + pos.x(), e.y() + pos.y()));
+        });
         gameFramework.endShape(Main.CLOSE);
+    }
+
+    public void destroyAsteroid(@NotNull Asteroid asteroid) {
+        asteroids.remove(asteroid);
     }
 }

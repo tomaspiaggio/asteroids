@@ -12,11 +12,11 @@ import java.awt.*;
  */
 public abstract class AbstractProjectile implements Mappable, Model, Collisionable<AbstractProjectile> {
 
-    private long damage;
-    private long speed;
-    private Shape shape;
-    private Vector2 position;
-    private Vector2 direction;
+    protected long damage;
+    protected long speed;
+    protected Shape shape;
+    protected Vector2 position;
+    protected Vector2 direction;
 
     public AbstractProjectile(long damage, long speed, Shape shape, Vector2 position, Vector2 direction) {
         this.damage = damage;
