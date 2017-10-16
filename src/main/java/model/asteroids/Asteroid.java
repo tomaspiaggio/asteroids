@@ -10,8 +10,11 @@ import java.awt.*;
  */
 public class Asteroid extends AbstractProjectile {
 
-    public Asteroid(int damage, double speed, @NotNull Shape shape, @NotNull Vector2 position, @NotNull Vector2 direction) {
+    private int life;
+
+    public Asteroid(long damage, long speed, @NotNull Shape shape, @NotNull Vector2 position, @NotNull Vector2 direction, int life) {
         super(damage, speed, shape, position, direction);
+        this.life = life;
     }
 
     @Override
@@ -21,7 +24,7 @@ public class Asteroid extends AbstractProjectile {
 
     @Override
     public void collisionedWith(AbstractProjectile collisionable) {
-
+        if(collisionable.getClass() == Bullet.class) life -= collisionable.getDamage();
     }
 
 }

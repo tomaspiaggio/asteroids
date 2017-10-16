@@ -12,13 +12,13 @@ import java.awt.*;
  */
 public abstract class AbstractProjectile implements Mappable, Model, Collisionable<AbstractProjectile> {
 
-    private int damage;
-    private double speed;
+    private long damage;
+    private long speed;
     private Shape shape;
     private Vector2 position;
     private Vector2 direction;
 
-    public AbstractProjectile(int damage, double speed, Shape shape, Vector2 position, Vector2 direction) {
+    public AbstractProjectile(long damage, long speed, Shape shape, Vector2 position, Vector2 direction) {
         this.damage = damage;
         this.speed = speed;
         this.shape = shape;
@@ -40,11 +40,11 @@ public abstract class AbstractProjectile implements Mappable, Model, Collisionab
         return direction;
     }
 
-    public int getDamage() {
+    public long getDamage() {
         return damage;
     }
 
-    public double getSpeed() {
+    public long getSpeed() {
         return speed;
     }
 }

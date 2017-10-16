@@ -11,6 +11,12 @@ case class Vector2(x: Float, y: Float) {
 
   def rotate(angle: Float): Vector2 = Vector2(x * cos(angle) - y * sin(angle) toFloat, x * sin(angle) + y * cos(angle) toFloat)
 
+  def rotateDeg(angle: Float): Vector2 = rotate(-Math.PI / (180 / angle) toFloat)
+
+  def setX(x: Float): Vector2 = Vector2(x, y)
+
+  def setY(y: Float): Vector2 = Vector2(x, y)
+
   lazy val module: Float = Math.pow(Math.pow(x, 2) + Math.pow(y, 2), 0.5).toFloat
 
   lazy val unitary: Vector2 = Vector2(x / module, y / module)
@@ -21,4 +27,3 @@ case class Vector2(x: Float, y: Float) {
 object Vector2 {
   def create(x: Float, y: Float) = Vector2(x: Float, y: Float)
 }
-

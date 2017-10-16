@@ -2,6 +2,7 @@ package edu.austral.util
 
 import java.awt.Shape
 import java.awt.geom.Area
+import java.util
 
 trait Collisionable[T <: Collisionable[T]] {
   def getShape: Shape
@@ -10,10 +11,10 @@ trait Collisionable[T <: Collisionable[T]] {
 }
 
 class CollisionEngine[T <: Collisionable[T]] {
-  def checkCollisions(collisionables: List[T]): Unit = {
+  def checkCollisions(collisionables: util.List[T]): Unit = {
     if (collisionables.isEmpty) return
 
-    checkCollisions(collisionables.head, collisionables.tail)
+    checkCollisions(collisionables.get(0), collisionables.subList(1, collisionables.size()))
   }
 
   private def testIntersection(shapeA: Shape, shapeB: Shape): Boolean = {
@@ -22,17 +23,17 @@ class CollisionEngine[T <: Collisionable[T]] {
     !areaA.isEmpty
   }
 
-  private def checkCollisions(current: T, collisionables: List[T]): Unit = {
+  def checkCollisions(current: T, collisionables: util.List[T]): Unit = {
     if (collisionables.isEmpty) return
 
     collisionables
-      .foreach(collisionable => {
+      .forEach(collisionable => {
         if (testIntersection(current.getShape, collisionable.getShape)) {
           current.collisionedWith(collisionable)
           collisionable.collisionedWith(current)
         }
       })
 
-    checkCollisions(collisionables.head, collisionables.tail)
+    checkCollisions(collisionables.get(0), collisionables.subList(1, collisionables.size()))
   }
 }

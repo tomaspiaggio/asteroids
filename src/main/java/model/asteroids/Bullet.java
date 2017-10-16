@@ -10,13 +10,13 @@ import java.awt.*;
  */
 public class Bullet extends AbstractProjectile {
 
-    public Bullet(int damage, double speed, @NotNull Shape shape, @NotNull Vector2 position, @NotNull Vector2 direction) {
-        super(damage, speed, shape, position, direction);
+    public Bullet(long damage, long speed, @NotNull Vector2 position, @NotNull Vector2 direction) {
+        super(damage, speed, /*new Ellpise*/ null, position, direction);
     }
 
     @Override
     public void update(float deltaTime) {
-
+        // ir en la direccion dicha delta time para adelante
     }
 
     @Override

@@ -1,5 +1,6 @@
 package model.interfaces;
 
+import edu.austral.util.Collisionable;
 import edu.austral.util.Vector2;
 
 /**

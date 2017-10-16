@@ -1,5 +1,6 @@
 package model.builders;
 
+import com.sun.istack.internal.NotNull;
 import edu.austral.util.Vector2;
 import model.asteroids.Asteroid;
 import model.geommetrics.Point2D;
@@ -16,19 +17,23 @@ public class AsteroidBuilder implements Builder<Asteroid> {
     private int vertices;
     private int radius;
     private int damage;
-    private double speed;
-    private Vector2 position;
-    private Vector2 direction;
+    private int speed;
+    private final int width;
+    private final int height;
     private Shape shape;
+    private List<Vector2> positions;
 
-    public AsteroidBuilder(int vertices, int radius, int damage, double speed, Vector2 position, Vector2 direction) {
-        this.vertices = vertices;
-        this.radius = radius;
-        this.damage = damage;
-        this.speed = speed;
-        this.position = position;
-        this.direction = direction;
-        makeShape();
+    public AsteroidBuilder(int width, int height) {
+        this.width = width;
+        this.height = height;
+        positions.add(new Vector2(0, height / 3));
+        positions.add(new Vector2(0, height / 3 * 2));
+        positions.add(new Vector2(width, height / 3 * 2));
+        positions.add(new Vector2(width, height / 3 * 2));
+        positions.add(new Vector2(width / 3, 0));
+        positions.add(new Vector2(width / 3 * 2, 0));
+        positions.add(new Vector2(width / 3, height));
+        positions.add(new Vector2(width / 3 * 2, height));
     }
 
     private Point2D randomPointWithinCircle(double radius) {
@@ -75,8 +80,23 @@ public class AsteroidBuilder implements Builder<Asteroid> {
 //        shape = new Shape
     }
 
+    public AsteroidBuilder setVertices(int vertices) {
+        this.vertices = Math.min(10, Math.max(3, vertices));
+        this.radius = vertices * 10;
+        this.damage = vertices * 100;
+        this.speed = 100/vertices;
+        makeShape();
+        return this;
+    }
+
     @Override
     public Asteroid build() {
-        return new Asteroid(damage, speed, shape, position, direction);;
+        final Vector2 position = positions.get((int)((positions.size() - 1) * Math.random()));
+        Vector2 direction = new Vector2(0, speed);
+        if(position.x() == width) direction.rotateDeg((float) Math.random() * 180);
+        else if (position.x() == 0) direction.rotateDeg(-(float)(Math.random() * 180));
+        else if(position.y() == height) direction.rotateDeg(90 + (float)(Math.random() * 180));
+        else direction.rotateDeg(-90 + (float)(Math.random() * 180));
+        return new Asteroid(damage, speed, shape, position, direction, vertices * 100);
     }
 }
