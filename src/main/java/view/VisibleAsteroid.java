@@ -27,12 +27,12 @@ public class VisibleAsteroid extends VisibleObject {
     }
 
     public void displayAsteroids() {
-        gameFramework.beginShape();
         asteroids.forEach(a -> {
+            gameFramework.beginShape();
             final Vector2 pos = a.getPosition();
             a.getPoints().forEach(e -> gameFramework.vertex(e.x() + pos.x(), e.y() + pos.y()));
+            gameFramework.endShape(Main.CLOSE);
         });
-        gameFramework.endShape(Main.CLOSE);
     }
 
     public void destroyAsteroid(@NotNull Asteroid asteroid) {

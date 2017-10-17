@@ -90,10 +90,10 @@ public class AsteroidBuilder implements Builder<Asteroid> {
     public Asteroid build() {
         final Vector2 position = positions.get((int)((positions.size() - 1) * Math.random()));
         Vector2 direction = new Vector2(0, speed);
-        if(position.x() == width) direction.rotateDeg((float) Math.random() * 180);
-        else if (position.x() == 0) direction.rotateDeg(-(float)(Math.random() * 180));
-        else if(position.y() == height) direction.rotateDeg(90 + (float)(Math.random() * 180));
-        else direction.rotateDeg(-90 + (float)(Math.random() * 180));
+        if(position.x() == width) direction = direction.rotateDeg((float) Math.random() * 180);
+        else if (position.x() == 0) direction = direction.rotateDeg(-(float)(Math.random() * 180));
+        else if(position.y() == height) direction = direction.rotateDeg(90 + (float)(Math.random() * 180));
+        else direction = direction.rotateDeg(-90 + (float)(Math.random() * 180));
         return new Asteroid(damage, speed, shape, position, direction, vertices * 100, this.points);
     }
 }
