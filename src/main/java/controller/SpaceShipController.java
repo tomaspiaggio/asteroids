@@ -1,8 +1,8 @@
 package controller;
 
 import com.sun.istack.internal.NotNull;
-import model.SpaceShip;
-import model.asteroids.Bullet;
+import model.spaceship.SpaceShip;
+import model.projectiles.bullet.Bullet;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;

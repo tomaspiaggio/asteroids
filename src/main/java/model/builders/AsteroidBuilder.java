@@ -1,13 +1,13 @@
 package model.builders;
 
-import com.sun.istack.internal.NotNull;
 import edu.austral.util.Vector2;
-import model.asteroids.Asteroid;
+import model.projectiles.asteroid.Asteroid;
+import util.Builder;
 
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Tomas on 10/11/17.
@@ -78,10 +78,13 @@ public class AsteroidBuilder implements Builder<Asteroid> {
     }
 
     public AsteroidBuilder setVertices(int vertices) {
-        this.vertices = Math.min(10, Math.max(3, vertices));
-        this.radius = vertices * 2;
-        this.damage = vertices * 100;
-        this.speed = 100/vertices;
+        if(vertices == 7) vertices = 6;
+        if(vertices == 8) vertices = 9;
+        this.vertices = Math.min(10, Math.max(4, vertices));
+        this.radius = this.vertices * 2;
+        this.damage = this.vertices * 100;
+        this.speed = 50/this.vertices;
+        this.shape = new Ellipse2D.Float(this.radius, this.radius, this.radius, this.radius);
         makeShape();
         return this;
     }

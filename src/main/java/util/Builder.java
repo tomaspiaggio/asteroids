@@ -1,4 +1,4 @@
-package model.builders;
+package util;
 
 /**
  * Created by Tomas on 10/11/17.

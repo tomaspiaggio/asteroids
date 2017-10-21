@@ -1,4 +1,4 @@
-package model.asteroids;
+package model.projectiles;
 
 import edu.austral.util.Collisionable;
 import edu.austral.util.Vector2;
@@ -10,7 +10,7 @@ import java.awt.*;
 /**
  * Created by Tomas on 10/10/17.
  */
-public abstract class AbstractProjectile implements Mappable, Model, Collisionable<AbstractProjectile> {
+public abstract class AbstractProjectile implements Mappable, Model, Collisionable<Model> {
 
     protected long damage;
     protected long speed;

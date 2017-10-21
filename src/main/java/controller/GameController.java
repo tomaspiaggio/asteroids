@@ -4,10 +4,9 @@ import com.sun.istack.internal.NotNull;
 import edu.austral.GameFramework;
 import edu.austral.util.CollisionEngine;
 import model.Game;
-import model.SpaceShip;
+import model.spaceship.SpaceShip;
 import model.interfaces.Model;
 import processing.core.PApplet;
-import view.VisibleAsteroid;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;

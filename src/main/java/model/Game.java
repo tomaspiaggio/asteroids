@@ -1,6 +1,7 @@
 package model;
 
 import com.sun.istack.internal.NotNull;
+import model.spaceship.SpaceShip;
 
 import java.util.List;
 
