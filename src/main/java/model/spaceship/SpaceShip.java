@@ -83,6 +83,10 @@ public class SpaceShip implements Model, Mappable, Collisionable<Model> {
         return aux;
     }
 
+    public void correctPosition(@NotNull Vector2 position) {
+        this.position = position;
+    }
+
     @Override
     public boolean isAlive() {
         return life > 0;
