@@ -31,10 +31,11 @@ public class Main extends GameFramework {
     private static final int height = 600;
     private final Map<Class<? extends Model>, Displayer> modelDisplayers;
     private final Map<Class<? extends Model>, Function<Mappable, Boolean>> modelOutsideMap;
+    private final Map<Integer, Integer> keyEvents;
     private final AsteroidBuilder ab = new AsteroidBuilder(width, height);
     private final float asteroidTimeThreshHold = 1000;
     private float lastAsteroidTime = 0;
-    private Character currentKey;
+    private int currentKey = -1;
 
     public Main() {
         // Instantiations
@@ -42,6 +43,17 @@ public class Main extends GameFramework {
         this.modelOutsideMap = new HashMap<>();
         this.modelDisplayers = new HashMap<>();
         this.models = new ArrayList<>();
+        this.keyEvents = new HashMap<>();
+
+        // Initializing key events
+        this.keyEvents.put(37, KeyEvent.VK_LEFT);
+        this.keyEvents.put(38, KeyEvent.VK_UP);
+        this.keyEvents.put(39, KeyEvent.VK_RIGHT);
+        this.keyEvents.put(97, KeyEvent.VK_A);
+        this.keyEvents.put(119, KeyEvent.VK_W);
+        this.keyEvents.put(100, KeyEvent.VK_D);
+        this.keyEvents.put(9, KeyEvent.VK_TAB);
+        this.keyEvents.put(32, KeyEvent.VK_SPACE);
 
         // Initializing two players
         players.add(new SpaceShip(new Vector2(width/4, height/2)));
@@ -94,30 +106,28 @@ public class Main extends GameFramework {
 
         // Checking keyPresses and keyReleases
         if(keyPressed) {
-            keyPressed(lowerCase(key));
-            currentKey = key;
-        } else if(currentKey != null) {
-            keyReleased(lowerCase(currentKey));
-            currentKey = null;
+            if(currentKey == -1) currentKey = (keyEvent.getKey() != 65535)? keyEvent.getKey() : keyEvent.getKeyCode();
+            keyPressed(currentKey);
+        } else if(currentKey != -1) {
+            keyReleased(currentKey);
+            currentKey = -1;
         }
 
         // TODO: CHECK COLLISIONS
     }
 
-    private char lowerCase(char letter) {
-        if(letter < 91 && letter >= 41)
-            return (char)(letter + 32);
-        return letter;
+
+    public void keyPressed(int event) {
+        Integer parsedEvent = keyEvents.get(event);
+        if(parsedEvent == null) return;
+        spaceShipController.keyPressed(parsedEvent);
     }
 
-    private void keyPressed(char event) {
-        spaceShipController.keyPressed(event);
-        System.out.println(event + " pressed");
-    }
 
-    private void keyReleased(char event) {
-        spaceShipController.keyReleased(event);
-        System.out.println(event + " released");
+    public void keyReleased(int event) {
+        Integer parsedEvent = keyEvents.get(event);
+        if(parsedEvent == null) return;
+        spaceShipController.keyReleased(parsedEvent);
     }
 
     private boolean isWithinMap(@NotNull Mappable mappable) {
@@ -154,16 +164,5 @@ public class Main extends GameFramework {
 
     public void circle(float x, float y, float radius) {
         ellipse(x, y, radius, radius);
-    }
-
-
-    @Override
-    public void keyPressed(KeyEvent event) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent event) {
-
     }
 }

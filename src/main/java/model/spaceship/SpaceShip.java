@@ -12,6 +12,7 @@ import model.interfaces.Model;
 import util.Action;
 
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +24,7 @@ import java.util.function.BiConsumer;
  */
 public class SpaceShip implements Model, Mappable, Collisionable<Model> {
 
-    private Shape shape;
+    private final Shape shape;
     private Vector2 position;
     private Vector2 direction;
     private long life;
@@ -34,28 +35,31 @@ public class SpaceShip implements Model, Mappable, Collisionable<Model> {
     private final BulletBuilder bulletBuilder;
     private final Map<SpaceShipActions, BiConsumer<Vector2, Vector2>> spaceShipActions;
     private final Map<Class<? extends Model>, Action> collisionables;
-    private List<Bullet> shooted;
 
     public SpaceShip(@NotNull Vector2 position) {
-        this.position = position;
+        // Initializations
         this.spaceShipActions = new HashMap<>();
         this.collisionables = new HashMap<>();
+        this.shape = new Ellipse2D.Double(position.x() - 10, position.y() - 10, 20, 20);
+        this.bulletBuilder = new BulletBuilder();
+        this.direction = new Vector2(0, 1);
+        this.position = position;
+        this.life = 1000000;
+        this.score = 0;
+
+        // Collisionable actions
         this.collisionables.put(Bullet.class, new SpaceShipActionBullet());
         this.collisionables.put(Bullet.class, new SpaceShipActionAsteroid());
+
+        // Setting SpaceShip Actions
         this.spaceShipActions.put(SpaceShipActions.LEFT, (pos, dir) -> direction.rotateDeg(-rotationAngle));
         this.spaceShipActions.put(SpaceShipActions.RIGHT, (pos, dir) -> direction.rotateDeg(rotationAngle));
+        this.spaceShipActions.put(SpaceShipActions.CHARGING, (pos, dir) -> { if(charging == 0) charging = System.currentTimeMillis(); });
+        this.spaceShipActions.put(SpaceShipActions.SHOOT, (pos, dir) -> shoot());
         this.spaceShipActions.put(SpaceShipActions.FORWARD, (pos, dir) -> {
             pos.setX(pos.x() + dir.x());
             pos.setY(pos.y() + dir.y());
         });
-        this.spaceShipActions.put(SpaceShipActions.CHARGING, (pos, dir) -> {
-            if(charging == 0) charging = System.currentTimeMillis();
-        });
-
-        shooted = new ArrayList<>();
-        bulletBuilder = new BulletBuilder();
-        life = 1000;
-        score = 0;
     }
 
     public void performAction(@NotNull SpaceShipActions action) {
@@ -77,12 +81,6 @@ public class SpaceShip implements Model, Mappable, Collisionable<Model> {
 
     }
 
-    public List<Bullet> getShooted() {
-        final List<Bullet> aux = shooted;
-        shooted = new ArrayList<>();
-        return aux;
-    }
-
     public void correctPosition(@NotNull Vector2 position) {
         this.position = position;
     }
@@ -94,6 +92,7 @@ public class SpaceShip implements Model, Mappable, Collisionable<Model> {
 
     public void incrementScore(double score) {
         this.score += score;
+        System.out.println(this.score);
     }
 
     public void decrementLife(long life) {
@@ -108,6 +107,10 @@ public class SpaceShip implements Model, Mappable, Collisionable<Model> {
     @Override
     public Vector2 getPosition() {
         return position;
+    }
+
+    public Vector2 getDirection() {
+        return direction;
     }
 
     @Override
