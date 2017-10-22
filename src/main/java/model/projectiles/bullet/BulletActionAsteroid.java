@@ -12,6 +12,7 @@ public class BulletActionAsteroid implements Action {
 
     @Override
     public void performAction(Option... options) {
+        System.out.println("Collisioned");
         final Option<Bullet> bullet = options[0];
         final Option<Model> asteroid = options[1];
         final long damage = bullet.getValue().getDamage();

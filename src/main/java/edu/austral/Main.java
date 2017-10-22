@@ -2,6 +2,7 @@ package edu.austral;
 
 import com.sun.istack.internal.NotNull;
 import controller.SpaceShipController;
+import edu.austral.util.CollisionEngine;
 import edu.austral.util.Vector2;
 import model.interfaces.Mappable;
 import model.projectiles.bullet.Bullet;
@@ -29,21 +30,24 @@ public class Main extends GameFramework {
     private List<Model> models;
     private static final int width = 800;
     private static final int height = 600;
+    private final List<SpaceShip> players;
     private final Map<Class<? extends Model>, Displayer> modelDisplayers;
     private final Map<Class<? extends Model>, Function<Mappable, Boolean>> modelOutsideMap;
     private final Map<Integer, Integer> keyEvents;
     private final AsteroidBuilder ab = new AsteroidBuilder(width, height);
+    private final CollisionEngine<Model> collisionEngine;
     private final float asteroidTimeThreshHold = 1000;
     private float lastAsteroidTime = 0;
     private int currentKey = -1;
 
     public Main() {
         // Instantiations
-        final List<SpaceShip> players = new ArrayList<>();
+        this.players = new ArrayList<>();
         this.modelOutsideMap = new HashMap<>();
         this.modelDisplayers = new HashMap<>();
         this.models = new ArrayList<>();
         this.keyEvents = new HashMap<>();
+        this.collisionEngine = new CollisionEngine<>();
 
         // Initializing key events
         this.keyEvents.put(37, KeyEvent.VK_LEFT);
@@ -55,12 +59,13 @@ public class Main extends GameFramework {
         this.keyEvents.put(9, KeyEvent.VK_TAB);
         this.keyEvents.put(32, KeyEvent.VK_SPACE);
 
-        // Initializing two players
+        // Initializing two players and adding them to Models list
         players.add(new SpaceShip(new Vector2(width/4, height/2)));
         players.add(new SpaceShip(new Vector2((width/4) * 3, height/2)));
+        this.models.addAll(players);
 
         // Initializing spaceship controller with players
-        spaceShipController = new SpaceShipController(players);
+        this.spaceShipController = new SpaceShipController(players);
 
         // To be able to check for different models different ways of being outside the map
         this.modelOutsideMap.put(Asteroid.class, a -> {
@@ -75,7 +80,7 @@ public class Main extends GameFramework {
         });
         this.modelOutsideMap.put(SpaceShip.class, a -> {
             final Vector2 pos = a.getPosition();
-            final Vector2 corrected = new Vector2(Math.min(Math.min(width, pos.x()), 0), Math.min(Math.min(height, pos.y()), 0));
+            final Vector2 corrected = new Vector2(Math.max(Math.min(width, pos.x()), 0), Math.max(Math.min(height, pos.y()), 0));
             ((SpaceShip) a).correctPosition(corrected);
             return true;
         });
@@ -91,15 +96,23 @@ public class Main extends GameFramework {
     }
 
     @Override public void draw(float time, PApplet graphics) {
+
         // Filtering outside map
         models = models.stream()
                 .filter(e -> isWithinMap(((Mappable) e)))
+                .filter(e -> e.isAlive())
                 .collect(Collectors.toList());
+
+        //Getting shots from spaceships
+        players.forEach(e -> models.addAll(e.getShots()));
+
         // Updating elements and displaying them
         models.forEach(e -> {
             e.update(time);
             modelDisplayers.get(e.getClass()).display(e);
         });
+
+        collisionEngine.checkCollisions(models);
 
         // Spawning asteroids
         spawnAsteroids(time);
@@ -112,8 +125,6 @@ public class Main extends GameFramework {
             keyReleased(currentKey);
             currentKey = -1;
         }
-
-        // TODO: CHECK COLLISIONS
     }
 
 

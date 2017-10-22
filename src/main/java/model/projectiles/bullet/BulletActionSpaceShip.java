@@ -1,6 +1,7 @@
 package model.projectiles.bullet;
 
 import com.sun.istack.internal.NotNull;
+import model.interfaces.Model;
 import model.spaceship.SpaceShip;
 import util.Action;
 import util.Option;
@@ -18,6 +19,11 @@ public class BulletActionSpaceShip implements Action {
 
     public void performAction(@NotNull Option... options) {
         final Option<Bullet> bullet = options[0];
-        this.spaceship.incrementScore(bullet.getValue().getScore());
+        final Option<Model> spaceship = options[1];
+        if(((SpaceShip) spaceship.getValue()) != this.spaceship) {
+            this.spaceship.incrementScore(bullet.getValue().getScore());
+            ((SpaceShip) spaceship).decrementLife(bullet.getValue().getDamage());
+            bullet.getValue().decrementDamage(bullet.getValue().getDamage());
+        }
     }
 }

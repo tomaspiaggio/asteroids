@@ -44,7 +44,8 @@ public class Asteroid extends AbstractProjectile {
 
     @Override
     public void collisionedWith(@NotNull Model collisionable) {
-        collisionables.get(collisionable.getClass()).performAction(() -> this, () -> collisionable);
+        final Action action = collisionables.get(collisionable.getClass());
+        if(action != null) action.performAction(() -> this, () -> collisionable);
     }
 
     public List<Vector2> getPoints() {

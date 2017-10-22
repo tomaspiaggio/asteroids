@@ -22,6 +22,8 @@ case class Vector2(x: Float, y: Float) {
   lazy val unitary: Vector2 = Vector2(x / module, y / module)
 
   lazy val angle: Float = atan2(y, x) - atan2(0, 1) toFloat
+
+  lazy val angleDeg: Float = (angle / Math.PI * 180) toFloat
 }
 
 object Vector2 {

@@ -12,10 +12,7 @@ public class SpaceShipActionBullet implements Action {
 
     @Override
     public void performAction(Option... options) {
-        final Option<SpaceShip> spaceship = options[0];
-        final Option<Model> bullet = options[1];
-        spaceship.getValue().decrementLife(((Bullet) bullet.getValue()).getDamage());
-        ((Bullet) bullet.getValue()).decrementDamage(((Bullet) bullet.getValue()).getDamage());
+
     }
 
 }
