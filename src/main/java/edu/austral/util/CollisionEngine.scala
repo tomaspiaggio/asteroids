@@ -33,7 +33,5 @@ class CollisionEngine[T <: Collisionable[T]] {
           collisionable.collisionedWith(current)
         }
       })
-
-    checkCollisions(collisionables.get(0), collisionables.subList(1, collisionables.size()))
   }
 }

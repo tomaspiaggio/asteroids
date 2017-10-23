@@ -44,11 +44,11 @@ public class Bullet extends AbstractProjectile {
     @Override
     public void update(float deltaTime) {
         position = new Vector2(position.x() + (direction.x() * deltaTime / (this.radius)), position.y() + (direction.y() * deltaTime / (this.radius)));
+        shape = new Ellipse2D.Double(position.x(), position.y(), radius, radius);
     }
 
     @Override
     public void collisionedWith(@NotNull Model collisionable) {
-        System.out.println(collisionable.getClass());
         final Action action = collisionables.get(collisionable.getClass());
         if(action != null) action.performAction(() -> this, () -> collisionable);
     }

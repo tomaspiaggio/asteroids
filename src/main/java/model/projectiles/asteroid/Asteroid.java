@@ -9,6 +9,7 @@ import model.projectiles.bullet.Bullet;
 import util.Action;
 
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import java.util.Map;
 public class Asteroid extends AbstractProjectile {
 
     private long life;
+    private final int radius;
     private final List<Vector2> points;
     private final Map<Class<? extends Model>, Action> collisionables;
 
@@ -28,10 +30,12 @@ public class Asteroid extends AbstractProjectile {
                     @NotNull Vector2 position,
                     @NotNull Vector2 direction,
                     long life,
-                    @NotNull List<Vector2> points) {
+                    @NotNull List<Vector2> points,
+                    int radius) {
         super(damage, speed, shape, position, direction);
         this.life = life;
         this.points = points;
+        this.radius = radius;
         this.collisionables = new HashMap<>();
         collisionables.put(Bullet.class, new AsteroidActionBullet());
         collisionables.put(SpaceShip.class, new AsteroidActionSpaceShip());
@@ -40,6 +44,7 @@ public class Asteroid extends AbstractProjectile {
     @Override
     public void update(float deltaTime) {
         position = new Vector2(position.x() + (direction.x() * deltaTime/1000), position.y() + (direction.y() * deltaTime / 1000));
+        shape = new Ellipse2D.Double(position.x(), position.y(), radius, radius);
     }
 
     @Override

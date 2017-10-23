@@ -25,9 +25,10 @@ import java.util.function.BiConsumer;
  */
 public class SpaceShip implements Model, Mappable, Collisionable<Model> {
 
-    private final Shape shape;
+    private Shape shape;
     private Vector2 position;
     private Vector2 direction;
+    private final int radius;
     private long life;
     private double score;
     private long charging;
@@ -45,9 +46,10 @@ public class SpaceShip implements Model, Mappable, Collisionable<Model> {
         this.shots = new ArrayList<>();
         this.bulletBuilder = new BulletBuilder();
         this.direction = new Vector2(0, -1);
-        this.shape = new Ellipse2D.Double(position.x() - 10, position.y() - 10, 20, 20);
+        this.radius = 20;
+        this.shape = new Ellipse2D.Double(position.x() - (radius/2), position.y() - (radius/2), radius, radius);
         this.position = position;
-        this.life = 1000000;
+        this.life = 10000;
         this.score = 0;
 
         // Collisionable actions
@@ -78,6 +80,7 @@ public class SpaceShip implements Model, Mappable, Collisionable<Model> {
 
     @Override
     public void update(float deltaTime) {
+        shape = new Ellipse2D.Double(position.x() - (radius/2), position.y() - (radius/2), radius, radius);
     }
 
     public void correctPosition(@NotNull Vector2 position) {

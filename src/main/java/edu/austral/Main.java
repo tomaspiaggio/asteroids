@@ -1,6 +1,7 @@
 package edu.austral;
 
 import com.sun.istack.internal.NotNull;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import controller.SpaceShipController;
 import edu.austral.util.CollisionEngine;
 import edu.austral.util.Vector2;
@@ -27,10 +28,9 @@ import java.util.stream.Collectors;
 public class Main extends GameFramework {
 
     private final SpaceShipController spaceShipController;
-    private List<Model> models;
+    private final Map<Class<? extends Model>, List<Model>> models;
     private static final int width = 800;
     private static final int height = 600;
-    private final List<SpaceShip> players;
     private final Map<Class<? extends Model>, Displayer> modelDisplayers;
     private final Map<Class<? extends Model>, Function<Mappable, Boolean>> modelOutsideMap;
     private final Map<Integer, Integer> keyEvents;
@@ -42,10 +42,9 @@ public class Main extends GameFramework {
 
     public Main() {
         // Instantiations
-        this.players = new ArrayList<>();
         this.modelOutsideMap = new HashMap<>();
         this.modelDisplayers = new HashMap<>();
-        this.models = new ArrayList<>();
+        this.models = new HashMap<>();
         this.keyEvents = new HashMap<>();
         this.collisionEngine = new CollisionEngine<>();
 
@@ -60,9 +59,14 @@ public class Main extends GameFramework {
         this.keyEvents.put(32, KeyEvent.VK_SPACE);
 
         // Initializing two players and adding them to Models list
+        final List<SpaceShip> players = new ArrayList<>();
         players.add(new SpaceShip(new Vector2(width/4, height/2)));
         players.add(new SpaceShip(new Vector2((width/4) * 3, height/2)));
-        this.models.addAll(players);
+
+        // Initializing models lists
+        this.models.put(SpaceShip.class, new ArrayList<>(players));
+        this.models.put(Bullet.class, new ArrayList<>());
+        this.models.put(Asteroid.class, new ArrayList<>());
 
         // Initializing spaceship controller with players
         this.spaceShipController = new SpaceShipController(players);
@@ -97,22 +101,34 @@ public class Main extends GameFramework {
 
     @Override public void draw(float time, PApplet graphics) {
 
-        // Filtering outside map
-        models = models.stream()
-                .filter(e -> isWithinMap(((Mappable) e)))
-                .filter(e -> e.isAlive())
-                .collect(Collectors.toList());
-
-        //Getting shots from spaceships
-        players.forEach(e -> models.addAll(e.getShots()));
-
-        // Updating elements and displaying them
-        models.forEach(e -> {
-            e.update(time);
-            modelDisplayers.get(e.getClass()).display(e);
+        // Filtering outside map and dead
+        models.keySet().forEach(key -> {
+            final List current = models.get(key).stream()
+                    .filter(e -> isWithinMap(((Mappable) e)))
+                    .filter(e -> e.isAlive())
+                    .collect(Collectors.toList());
+            models.put(key, current);
         });
 
-        collisionEngine.checkCollisions(models);
+        if(models.get(SpaceShip.class).size() != 2) return;
+
+        //Getting shots from spaceships
+        models.get(SpaceShip.class)
+                .forEach(e -> models.get(Bullet.class)
+                .addAll(((SpaceShip) e).getShots()));
+
+        // Updating elements and displaying them
+        models.keySet().forEach(key -> {
+            models.get(key).forEach(e -> {
+                e.update(time);
+                modelDisplayers.get(e.getClass()).display(e);
+            });
+        });
+
+        // Check collisions
+        checkCollisions(SpaceShip.class, Bullet.class);
+        checkCollisions(SpaceShip.class, Asteroid.class);
+        checkCollisions(Bullet.class, Asteroid.class);
 
         // Spawning asteroids
         spawnAsteroids(time);
@@ -125,6 +141,12 @@ public class Main extends GameFramework {
             keyReleased(currentKey);
             currentKey = -1;
         }
+    }
+
+    private void checkCollisions(Class<? extends Model> mod1, Class<? extends Model> mod2){
+        models.get(mod1)
+                .stream()
+                .forEach(e -> collisionEngine.checkCollisions(e, models.get(mod2)));
     }
 
 
@@ -154,8 +176,8 @@ public class Main extends GameFramework {
     }
 
     private void newAsteroid(int vertices) {
-        final Asteroid a = ab.setVertices(vertices).build();
-        models.add(a);
+        final Asteroid asteroid = ab.setVertices(vertices).build();
+        models.get(Asteroid.class).add(asteroid);
     }
 
     /**

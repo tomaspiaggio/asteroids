@@ -97,6 +97,6 @@ public class AsteroidBuilder implements Builder<Asteroid> {
         else if (position.x() == 0) direction = direction.rotateDeg(-(float)(Math.random() * 180));
         else if(position.y() == height) direction = direction.rotateDeg(90 + (float)(Math.random() * 180));
         else direction = direction.rotateDeg(-90 + (float)(Math.random() * 180));
-        return new Asteroid(damage, speed, shape, position, direction, vertices * 100, this.points);
+        return new Asteroid(damage, speed, shape, position, direction, vertices * 30, this.points, this.radius);
     }
 }

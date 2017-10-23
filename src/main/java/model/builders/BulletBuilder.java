@@ -16,7 +16,7 @@ public class BulletBuilder implements Builder<Bullet> {
 
     public BulletBuilder setChargeTime(long time, @NotNull Vector2 position, @NotNull Vector2 direction, @NotNull SpaceShip spaceShip) {
         time = Math.min(time, 1000); // max time charging bullet = 1 second
-        bullet = new Bullet(time/10, 1000/time, position, direction, time/10, new BulletActionSpaceShip(spaceShip), time);
+        bullet = new Bullet(time, 1000/time, position, direction, time/10, new BulletActionSpaceShip(spaceShip), time);
         return this;
     }
 
