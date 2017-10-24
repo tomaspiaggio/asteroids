@@ -12,9 +12,9 @@ import java.util.List;
 /**
  * Created by Tomas on 10/15/17.
  */
-public class VisibleAsteroid extends Displayer<Asteroid> {
+public class AsteroidDisplayer extends Displayer<Asteroid> {
 
-    public VisibleAsteroid(@NotNull Main gameFramework) {
+    public AsteroidDisplayer(@NotNull Main gameFramework) {
         super(gameFramework);
     }
 

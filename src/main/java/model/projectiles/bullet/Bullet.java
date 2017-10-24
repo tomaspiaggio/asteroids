@@ -36,6 +36,7 @@ public class Bullet extends AbstractProjectile {
         this.bulletAction = bulletAction;
         this.damage = damage;
         this.speed = speed;
+        this.score = score;
         this.collisionables = new HashMap<>();
         collisionables.put(SpaceShip.class, bulletAction);
         collisionables.put(Asteroid.class, new BulletActionAsteroid());

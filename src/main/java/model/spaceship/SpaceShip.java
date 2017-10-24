@@ -94,7 +94,6 @@ public class SpaceShip implements Model, Mappable, Collisionable<Model> {
 
     public void incrementScore(double score) {
         this.score += score;
-        System.out.println(this.score);
     }
 
     public void decrementLife(long life) {
@@ -119,6 +118,10 @@ public class SpaceShip implements Model, Mappable, Collisionable<Model> {
         final List<Bullet> shots = this.shots;
         this.shots = new ArrayList<>();
         return shots;
+    }
+
+    public double getScore() {
+        return score;
     }
 
     @Override

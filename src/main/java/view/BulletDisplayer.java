@@ -12,10 +12,10 @@ import java.util.List;
 /**
  * Created by Tomas on 10/15/17.
  */
-public class VisibleBullet extends Displayer<Bullet> {
+public class BulletDisplayer extends Displayer<Bullet> {
 
 
-    public VisibleBullet(@NotNull Main gameFramework) {
+    public BulletDisplayer(@NotNull Main gameFramework) {
         super(gameFramework);
     }
 

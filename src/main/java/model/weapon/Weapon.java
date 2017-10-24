@@ -1,12 +1,13 @@
 package model.weapon;
 
 import com.sun.istack.internal.NotNull;
+import model.interfaces.Model;
 import util.Option;
 
 /**
  * Created by Tomas on 10/17/17.
  */
-public class Weapon {
+public class Weapon implements Model {
 
     private final WeaponAction weaponAction;
     private long time;

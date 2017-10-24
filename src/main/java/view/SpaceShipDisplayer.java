@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 /**
  * Created by Tomas on 10/15/17.
  */
-public class VisibleSpaceShip extends Displayer<SpaceShip> {
+public class SpaceShipDisplayer extends Displayer<SpaceShip> {
 
-    public VisibleSpaceShip(@NotNull Main gameFramework) {
+    public SpaceShipDisplayer(@NotNull Main gameFramework) {
         super(gameFramework);
     }
 

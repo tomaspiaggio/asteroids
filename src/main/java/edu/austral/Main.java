@@ -1,7 +1,6 @@
 package edu.austral;
 
 import com.sun.istack.internal.NotNull;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import controller.SpaceShipController;
 import edu.austral.util.CollisionEngine;
 import edu.austral.util.Vector2;
@@ -12,9 +11,9 @@ import model.projectiles.asteroid.Asteroid;
 import model.builders.AsteroidBuilder;
 import model.interfaces.Model;
 import processing.core.PApplet;
-import view.VisibleAsteroid;
-import view.VisibleBullet;
-import view.VisibleSpaceShip;
+import view.AsteroidDisplayer;
+import view.BulletDisplayer;
+import view.SpaceShipDisplayer;
 import view.interfaces.Displayer;
 
 import java.awt.event.KeyEvent;
@@ -31,6 +30,7 @@ public class Main extends GameFramework {
     private final Map<Class<? extends Model>, List<Model>> models;
     private static final int width = 800;
     private static final int height = 600;
+    private final List<SpaceShip> players;
     private final Map<Class<? extends Model>, Displayer> modelDisplayers;
     private final Map<Class<? extends Model>, Function<Mappable, Boolean>> modelOutsideMap;
     private final Map<Integer, Integer> keyEvents;
@@ -47,6 +47,7 @@ public class Main extends GameFramework {
         this.models = new HashMap<>();
         this.keyEvents = new HashMap<>();
         this.collisionEngine = new CollisionEngine<>();
+        this.players = new ArrayList<>();
 
         // Initializing key events
         this.keyEvents.put(37, KeyEvent.VK_LEFT);
@@ -59,7 +60,6 @@ public class Main extends GameFramework {
         this.keyEvents.put(32, KeyEvent.VK_SPACE);
 
         // Initializing two players and adding them to Models list
-        final List<SpaceShip> players = new ArrayList<>();
         players.add(new SpaceShip(new Vector2(width/4, height/2)));
         players.add(new SpaceShip(new Vector2((width/4) * 3, height/2)));
 
@@ -90,9 +90,9 @@ public class Main extends GameFramework {
         });
 
         // Each mappable has different ways of displaying itself
-        this.modelDisplayers.put(Bullet.class, new VisibleBullet(this));
-        this.modelDisplayers.put(Asteroid.class, new VisibleAsteroid(this));
-        this.modelDisplayers.put(SpaceShip.class, new VisibleSpaceShip(this));
+        this.modelDisplayers.put(Bullet.class, new BulletDisplayer(this));
+        this.modelDisplayers.put(Asteroid.class, new AsteroidDisplayer(this));
+        this.modelDisplayers.put(SpaceShip.class, new SpaceShipDisplayer(this));
     }
 
     public static void main(String args[]) {
@@ -110,7 +110,10 @@ public class Main extends GameFramework {
             models.put(key, current);
         });
 
-        if(models.get(SpaceShip.class).size() != 2) return;
+        if(models.get(SpaceShip.class).size() != 2) {
+            gameOver();
+            return;
+        }
 
         //Getting shots from spaceships
         models.get(SpaceShip.class)
@@ -178,6 +181,14 @@ public class Main extends GameFramework {
     private void newAsteroid(int vertices) {
         final Asteroid asteroid = ab.setVertices(vertices).build();
         models.get(Asteroid.class).add(asteroid);
+    }
+
+    private void gameOver() {
+        text("Game Over", width/2 - 40, height/2);
+        players.forEach(e -> {
+            int index = players.indexOf(e) + 1;
+            text("Player" + index + " score: " + e.getScore(), width/2 - 40, height/2 + (index * 15));
+        });
     }
 
     /**
