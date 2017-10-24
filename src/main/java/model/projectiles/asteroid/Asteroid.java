@@ -44,7 +44,7 @@ public class Asteroid extends AbstractProjectile {
     @Override
     public void update(float deltaTime) {
         position = new Vector2(position.x() + (direction.x() * deltaTime/1000), position.y() + (direction.y() * deltaTime / 1000));
-        shape = new Ellipse2D.Double(position.x(), position.y(), radius, radius);
+        shape = new Ellipse2D.Double(position.x() + (radius / 2), position.y() + (radius / 2), radius, radius);
     }
 
     @Override

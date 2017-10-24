@@ -84,8 +84,8 @@ public class AsteroidBuilder implements Builder<Asteroid> {
         this.radius = this.vertices * 2;
         this.damage = this.vertices * 100;
         this.speed = 50/this.vertices;
-        this.shape = new Ellipse2D.Float(this.radius, this.radius, this.radius, this.radius);
         makeShape();
+        this.radius *= 5;
         return this;
     }
 
@@ -97,6 +97,6 @@ public class AsteroidBuilder implements Builder<Asteroid> {
         else if (position.x() == 0) direction = direction.rotateDeg(-(float)(Math.random() * 180));
         else if(position.y() == height) direction = direction.rotateDeg(90 + (float)(Math.random() * 180));
         else direction = direction.rotateDeg(-90 + (float)(Math.random() * 180));
-        return new Asteroid(damage, speed, shape, position, direction, vertices * 30, this.points, this.radius);
+        return new Asteroid(damage, speed, new Ellipse2D.Double(position.x(), position.y(), this.radius, this.radius), position, direction, vertices * 30, this.points, this.radius);
     }
 }

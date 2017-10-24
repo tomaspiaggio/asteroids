@@ -6,6 +6,7 @@ import edu.austral.util.Vector2;
 import model.projectiles.asteroid.Asteroid;
 import view.interfaces.Displayer;
 
+import java.awt.*;
 import java.util.List;
 
 /**

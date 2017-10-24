@@ -15,14 +15,8 @@ import java.util.stream.Collectors;
  */
 public class VisibleSpaceShip extends Displayer<SpaceShip> {
 
-//    private final List<Vector2> baseTriangle;
-
     public VisibleSpaceShip(@NotNull Main gameFramework) {
         super(gameFramework);
-//        this.baseTriangle = new ArrayList<>();
-//        this.baseTriangle.add(new Vector2(-7.5f, 0));
-//        this.baseTriangle.add(new Vector2(0, 12.9903810568f));
-//        this.baseTriangle.add(new Vector2(0, 7.5f));
     }
 
     @Override
@@ -33,16 +27,5 @@ public class VisibleSpaceShip extends Displayer<SpaceShip> {
         gameFramework.fill(255, 0, 0);
         gameFramework.circle(pos.x() + (dir.x() * 25), pos.y() + (dir.y() * 25), 10);
         gameFramework.fill(255);
-//        final List<Vector2> triangle = this.baseTriangle
-//                .stream()
-//                .map(e -> new Vector2(e.x() + pos.x(), e.y() + pos.y()))
-//                .collect(Collectors.toList());
-//        System.out.println(triangle);
-//        final Vector2 current = triangle.get(2);
-//        gameFramework.pushMatrix();
-//        gameFramework.translate(current.x(), current.y() / 2);
-//        gameFramework.triangle(triangle.get(0).x(), triangle.get(0).y(), triangle.get(1).x(), triangle.get(1).y(), triangle.get(2).x(), triangle.get(2).y());
-//        gameFramework.rotate(dir.angle());
-//        gameFramework.popMatrix();
     }
 }
