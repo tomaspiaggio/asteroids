@@ -115,7 +115,7 @@ public class Main extends GameFramework {
             return;
         }
 
-        //Getting shots from spaceships
+        // Getting shots from spaceships
         models.get(SpaceShip.class)
                 .forEach(e -> models.get(Bullet.class)
                 .addAll(((SpaceShip) e).getShots()));
@@ -146,24 +146,24 @@ public class Main extends GameFramework {
         }
     }
 
-    private void checkCollisions(Class<? extends Model> mod1, Class<? extends Model> mod2){
-        models.get(mod1)
-                .stream()
-                .forEach(e -> collisionEngine.checkCollisions(e, models.get(mod2)));
-    }
-
-
-    public void keyPressed(int event) {
+    private void keyPressed(int event) {
         Integer parsedEvent = keyEvents.get(event);
         if(parsedEvent == null) return;
         spaceShipController.keyPressed(parsedEvent);
     }
 
 
-    public void keyReleased(int event) {
+    private void keyReleased(int event) {
         Integer parsedEvent = keyEvents.get(event);
         if(parsedEvent == null) return;
         spaceShipController.keyReleased(parsedEvent);
+    }
+
+
+    private void checkCollisions(Class<? extends Model> mod1, Class<? extends Model> mod2){
+        models.get(mod1)
+                .stream()
+                .forEach(e -> collisionEngine.checkCollisions(e, models.get(mod2)));
     }
 
     private boolean isWithinMap(@NotNull Mappable mappable) {
@@ -194,19 +194,9 @@ public class Main extends GameFramework {
     /**
      * Methods made public for Views not to be all inside this class
      */
-    public void beginShape() {
-        super.beginShape();
-    }
-
-    public void vertex(int x, int y) {
-        super.vertex(x, y);
-    }
-
+    public void beginShape() { super.beginShape(); }
     public void endShape(int option) { super.endShape(option); }
-
     public void ellipse(float x, float y, float width, float height) { super.ellipse(x, y, width, height); }
-
-    public void circle(float x, float y, float radius) {
-        ellipse(x, y, radius, radius);
-    }
+    public void circle(float x, float y, float radius) { ellipse(x, y, radius, radius); }
+    public void rect(float x, float y, float width, float height) { super.rect(x, y, width, height); }
 }

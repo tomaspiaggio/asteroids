@@ -29,17 +29,18 @@ public class Bullet extends AbstractProjectile {
                   @NotNull Vector2 position,
                   @NotNull Vector2 direction,
                   float radius,
-                  @NotNull BulletActionSpaceShip bulletAction,
+                  @NotNull BulletActionSpaceShip bulletActionSpaceShip,
+                  @NotNull BulletActionAsteroid bulletActionAsteroid,
                   double score) {
         super(damage, speed, new Ellipse2D.Double(position.x(), position.y(), radius, radius), position, direction);
         this.radius = radius;
-        this.bulletAction = bulletAction;
+        this.bulletAction = bulletActionSpaceShip;
         this.damage = damage;
         this.speed = speed;
         this.score = score;
         this.collisionables = new HashMap<>();
-        collisionables.put(SpaceShip.class, bulletAction);
-        collisionables.put(Asteroid.class, new BulletActionAsteroid());
+        collisionables.put(SpaceShip.class, bulletActionSpaceShip);
+        collisionables.put(Asteroid.class, bulletActionAsteroid);
     }
 
     @Override
@@ -51,7 +52,7 @@ public class Bullet extends AbstractProjectile {
     @Override
     public void collisionedWith(@NotNull Model collisionable) {
         final Action action = collisionables.get(collisionable.getClass());
-        if(action != null) action.performAction(() -> this, () -> collisionable);
+        if(action != null) action.performAction(() -> this, () -> collisionable, () -> score);
     }
 
     public void decrementDamage(long damage) {
