@@ -136,6 +136,12 @@ public class Main extends GameFramework {
         // Spawning asteroids
         spawnAsteroids(time);
 
+        // Display score
+        this.players.forEach(e -> {
+            int index = this.players.indexOf(e) + 1;
+            text("Player:\t" + index + "\tscore:\t" + e.getScore() + "\tlife:\t" + e.getLife(), 20, (index * 15));
+        });
+
         // Checking keyPresses and keyReleases
         if(keyPressed) {
             if(currentKey == -1) currentKey = (keyEvent.getKey() != 65535)? keyEvent.getKey() : keyEvent.getKeyCode();

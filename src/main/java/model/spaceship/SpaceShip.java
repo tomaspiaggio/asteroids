@@ -124,6 +124,10 @@ public class SpaceShip implements Model, Mappable, Collisionable<Model> {
         return score;
     }
 
+    public long getLife() {
+        return life;
+    }
+
     @Override
     public void collisionedWith(@NotNull Model collisionable) {
         final Action action = collisionables.get(collisionable.getClass());
