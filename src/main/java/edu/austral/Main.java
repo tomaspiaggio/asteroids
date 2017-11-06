@@ -34,7 +34,7 @@ public class Main extends GameFramework {
     private final Map<Class<? extends Model>, Displayer> modelDisplayers;
     private final Map<Class<? extends Model>, Function<Mappable, Boolean>> modelOutsideMap;
     private final Map<Integer, Integer> keyEvents;
-    private final AsteroidBuilder ab = new AsteroidBuilder(width, height);
+    private final AsteroidBuilder asteroidBuilder;
     private final CollisionEngine<Model> collisionEngine;
     private final float asteroidTimeThreshHold = 1000;
     private float lastAsteroidTime = 0;
@@ -48,6 +48,7 @@ public class Main extends GameFramework {
         this.keyEvents = new HashMap<>();
         this.collisionEngine = new CollisionEngine<>();
         this.players = new ArrayList<>();
+        this.asteroidBuilder = new AsteroidBuilder(width, height);
 
         // Initializing key events
         this.keyEvents.put(37, KeyEvent.VK_LEFT);
@@ -101,55 +102,28 @@ public class Main extends GameFramework {
 
     @Override public void draw(float time, PApplet graphics) {
 
-        // Filtering outside map and dead
-        models.keySet().forEach(key -> {
-            final List current = models.get(key).stream()
-                    .filter(e -> isWithinMap(((Mappable) e)))
-                    .filter(e -> e.isAlive())
-                    .collect(Collectors.toList());
-            models.put(key, current);
-        });
+        filterDead(); // Filtering outside map and dead
 
-        if(models.get(SpaceShip.class).size() != 2) {
+        // Check if game is over
+        if(isGameOver()) {
             gameOver();
             return;
         }
 
-        // Getting shots from spaceships
-        models.get(SpaceShip.class)
-                .forEach(e -> models.get(Bullet.class)
-                .addAll(((SpaceShip) e).getShots()));
+        updateShots(); // Getting shots from spaceships
 
-        // Updating elements and displaying them
-        models.keySet().forEach(key -> {
-            models.get(key).forEach(e -> {
-                e.update(time);
-                modelDisplayers.get(e.getClass()).display(e);
-            });
-        });
+        displayModels(time); // Updating elements and displaying them
 
         // Check collisions
         checkCollisions(SpaceShip.class, Bullet.class);
         checkCollisions(SpaceShip.class, Asteroid.class);
         checkCollisions(Bullet.class, Asteroid.class);
 
-        // Spawning asteroids
-        spawnAsteroids(time);
+        spawnAsteroids(time); // Spawning asteroids
 
-        // Display score
-        this.players.forEach(e -> {
-            int index = this.players.indexOf(e) + 1;
-            text("Player:\t" + index + "\tscore:\t" + e.getScore() + "\tlife:\t" + e.getLife(), 20, (index * 15));
-        });
+        updateScore(); // Display score
 
-        // Checking keyPresses and keyReleases
-        if(keyPressed) {
-            if(currentKey == -1) currentKey = (keyEvent.getKey() != 65535)? keyEvent.getKey() : keyEvent.getKeyCode();
-            keyPressed(currentKey);
-        } else if(currentKey != -1) {
-            keyReleased(currentKey);
-            currentKey = -1;
-        }
+        checkKeyPressed(); // Checking keyPresses and keyReleases
     }
 
     private void keyPressed(int event) {
@@ -172,6 +146,52 @@ public class Main extends GameFramework {
                 .forEach(e -> collisionEngine.checkCollisions(e, models.get(mod2)));
     }
 
+    private void checkKeyPressed() {
+        if(keyPressed) {
+            if(currentKey == -1) currentKey = (keyEvent.getKey() != 65535)? keyEvent.getKey() : keyEvent.getKeyCode();
+            keyPressed(currentKey);
+        } else if(currentKey != -1) {
+            keyReleased(currentKey);
+            currentKey = -1;
+        }
+    }
+
+    private void displayModels(float time) {
+        models.keySet().forEach(key -> {
+            models.get(key).forEach(e -> {
+                e.update(time);
+                modelDisplayers.get(e.getClass()).display(e);
+            });
+        });
+    }
+
+    private void updateScore() {
+        this.players.forEach(e -> {
+            int index = this.players.indexOf(e) + 1;
+            text("Player:\t" + index + "\tscore:\t" + e.getScore() + "\tlife:\t" + e.getLife(), 20, (index * 15));
+        });
+    }
+
+    private void updateShots() {
+        models.get(SpaceShip.class)
+                .forEach(e -> models.get(Bullet.class)
+                .addAll(((SpaceShip) e).getShots()));
+    }
+
+    private void filterDead() {
+        models.keySet().forEach(key -> {
+            final List current = models.get(key).stream()
+                    .filter(e -> isWithinMap(((Mappable) e)))
+                    .filter(e -> e.isAlive())
+                    .collect(Collectors.toList());
+            models.put(key, current);
+        });
+    }
+
+    private boolean isGameOver(){
+        return models.get(SpaceShip.class).size() < 2;
+    }
+
     private boolean isWithinMap(@NotNull Mappable mappable) {
         return modelOutsideMap.get(mappable.getClass()).apply(mappable);
     }
@@ -185,7 +205,7 @@ public class Main extends GameFramework {
     }
 
     private void newAsteroid(int vertices) {
-        final Asteroid asteroid = ab.setVertices(vertices).build();
+        final Asteroid asteroid = asteroidBuilder.setVertices(vertices).build();
         models.get(Asteroid.class).add(asteroid);
     }
 
